@@ -147,13 +147,13 @@ str escape_quotes(str code){
 }
 
 str form2js(AForm f) {	
-	return "<gen_ids(f)>\n" +
-	"<on_submit(f)>\n" + 
-	"<evaluate()>\n" + 
-	"<evaluateOnce()>\n" + 
-	"<recalculate()>\n" + 
-	"<get_value()>\n" +
-	"<update_visibility(f)>\n";
+	return "<gen_ids(f)>
+	'<on_submit(f)>
+	'<evaluate()>
+	'<evaluateOnce()> 
+	'<recalculate()> 
+	'<get_value()>
+	'<update_visibility(f)>";
 }
 
 //- global list of question ids
@@ -166,98 +166,98 @@ str gen_ids(AForm f){
 }
 
 str on_submit(AForm f){
-	result = "function onSubmit(){\n" +
-	"\tvar result = \"\";\n" +
-	"\tfor(var i in ids){\n" +
-	"\t\tvar em = document.getElementById(ids[i]);\n" +
-	"\t\t// handle computed questions before normal questions\n" +
-	"\t\tif(em.hasAttribute(\"data-value\") && em.visible){\n" +
-	"\t\t\tresult += ids[i] + \" : \" + em.getAttribute(\"data-value\") + \"\\n\";\n" +
-	"\t\t} else if(em.type == \"checkbox\"){\n" +
-  	"\t\t\tresult += ids[i] + \" : \" + em.checked + \"\\n\"\n" +
-	"\t\t} else if((! em.hasAttribute(\"class\")) && em.visible){\n" +
-	"\t\t\tresult += ids[i] + \" : \" + getValue(ids[i]) + \"\\n\";\n" +
-	"\t\t}\n" +
-	"\t}\n" +
-	"\tdocument.getElementById(\"output\").innerHTML = result;\n" +
-	"}\n";
+	result = "function onSubmit(){
+	'	var result = \"\";
+	'	for(var i in ids){
+	'		var em = document.getElementById(ids[i]);
+	'		// handle computed questions before normal questions
+	'		if(em.hasAttribute(\"data-value\") && em.visible){
+	'			result += ids[i] + \" : \" + em.getAttribute(\"data-value\") + \"\\n\";
+	'		} else if(em.type == \"checkbox\"){
+  	'			result += ids[i] + \" : \" + em.checked + \"\\n\"
+	'		} else if((! em.hasAttribute(\"class\")) && em.visible){
+	'			result += ids[i] + \" : \" + getValue(ids[i]) + \"\\n\";
+	'		}
+	'	}
+	'	document.getElementById(\"output\").innerHTML = result;
+	'}\n";
 	return result;
 }
 
 str evaluate(){
-	return "function ev(){\n" + 
-		"\tvar r = evOnce();\n" + 
-		"\tvar s;\n" +
-		"\twhile(true){\n" +
-		"\t\ts = evOnce();\n" + 
-		"\t\tif(r == s){\n" + 
-		"\t\t\tbreak;\n" + 
-		"\t\t}\n" + 
-		"\t\tr = s;\n" + 
-		"\t}\n" +
-		"\treturn r\n" +
-		"}\n";
+	return "function ev(){
+		'	var r = evOnce();
+		'	var s;
+		'	while(true){
+		'		s = evOnce();
+		'		if(r == s){
+		'			break;
+		'		} 
+		'		r = s;
+		'	}
+		'	return r;
+		'}\n";
 }
 
 str evaluateOnce(){ 
-	return "function evOnce(){\n" +
-		"\tvar result = \"\";\n" +
-		"\tfor(var i in ids){\n" +
-		"\t\tresult += ids[i] + \" : \" + recalculate(ids[i]) + \"\\n\";\n" +
-		"\t}\n" +
-		"\treturn result;\n" +
-		"}\n";
+	return "function evOnce(){
+		'	var result = \"\";
+		'	for(var i in ids){
+		'		result += ids[i] + \" : \" + recalculate(ids[i]) + \"\\n\";
+		'	}
+		'	return result;
+		'}\n";
 }
 
 str recalculate(){
-	return "function recalculate(id){\n" +
-		"\tvar em = document.getElementById(id);\n" +
-		"\tif(em.hasAttribute(\"expr\")) {\n" +
-		"\t\tvar value = eval(em.getAttribute(\"expr\"));\n" +
-		"\t\tem.setAttribute(\"data-value\", value);\n" +
-		"\t\treturn value;\n" +
-		"\t}\n"+
-		"\treturn getValue(id);\n" +
-		"}\n";
+	return "function recalculate(id){
+		'	var em = document.getElementById(id);
+		'	if(em.hasAttribute(\"expr\")) {
+		'		var value = eval(em.getAttribute(\"expr\"));
+		'		em.setAttribute(\"data-value\", value);
+		'		return value;
+		'	}
+		'	return getValue(id);
+		'}\n";
 }
 
 str get_value(){
-	return "function getValue(id){\n" +
-		"\tem = document.getElementById(id);\n" +
-		"\tif(em.hasAttribute(\"data-value\")){\n" +
-		"\t\treturn em.getAttribute(\"data-value\");\n" +
-		"\t} else if(em.hasAttribute(\"type\") && em.type == \"checkbox\"){\n" +
-		"\t\treturn em.checked;\n" +
-		"\t} else {\n" +
-		"\t\treturn em.value;\n" +
-		"\t}\n" +
-		"}\n";
+	return "function getValue(id){
+		'	em = document.getElementById(id);
+		'	if(em.hasAttribute(\"data-value\")){
+		'		return em.getAttribute(\"data-value\");
+		'	} else if(em.hasAttribute(\"type\") && em.type == \"checkbox\"){
+		'		return em.checked;
+		'	} else {
+		'		return em.value;
+		'	}
+		'}\n";
 }
 
 str update_visibility(AForm f){
-	return "function updateVisibility(){\n" +
-		"\t// mark every element as not visible\n" +
-		"\tfor(i in ids){\n" +
-		"\t\tdocument.getElementById(ids[i]).visible = false;\n" +
-		"\t}\n\n" +
-	
-		"\t// mark visible elements as visible\n" +
-		"<visibilityHelper(f.questions)>" +
-	
-		"\t// hide invisible elements, show visible elements\n" +
-		"\tfor(i in ids){\n" +
-		"\t\tvar em = document.getElementById(ids[i]);\n" +
-		"\t\tif(!em.hasAttribute(\"expr\")){\n" +
-		"\t\t\tif(em.visible){\n" +
-		"\t\t\t\tif(em.parentElement.hasAttribute(\"hidden\")){\n" +
-		"\t\t\t\t\tem.parentElement.removeAttribute(\"hidden\");\n" +
-		"\t\t\t\t}\n" +
-		"\t\t\t} else {\n" +
-		"\t\t\t\tem.parentElement.setAttribute(\"hidden\", \"true\");\n" +
-		"\t\t\t}\n" +
-		"\t\t}\n" +
-		"\t}\n" +
-		"}\n";
+	return "function updateVisibility(){
+		'	// mark every element as not visible
+		'	for(i in ids){
+		'		document.getElementById(ids[i]).visible = false;
+		'	}
+		'
+		'	// mark visible elements as visible
+		'<visibilityHelper(f.questions)>
+		'
+		'	// hide invisible elements, show visible elements
+		'	for(i in ids){
+		'		var em = document.getElementById(ids[i]);
+		'		if(!em.hasAttribute(\"expr\")){
+		'			if(em.visible){
+		'				if(em.parentElement.hasAttribute(\"hidden\")){
+		'					em.parentElement.removeAttribute(\"hidden\");
+		'				}
+		'			} else {
+		'				em.parentElement.setAttribute(\"hidden\", \"true\");
+		'			}
+		'		}
+		'	}
+		'}\n";
 }
 
 
@@ -266,13 +266,13 @@ str visibilityHelper(list[AQuestion] li){
 	for(q <- li){
 		switch(q){
 			case cond(AExpr c, list[AQuestion] \if, list[AQuestion] \else): {
-				result += "if ( eval(" + "<pretty_print(c)>" + ")) {\n";
-  				result += "<visibilityHelper(\if)>\n";
-  				result += "}\n";
+				result += "if ( eval(<pretty_print(c)>)) {
+  					'<visibilityHelper(\if)>
+  					'}\n";
   				if(\else != []){
-  					result += "else {";
-  					result += "<visibilityHelper(\else)>\n";
-  					result += "}";	
+  					result += "else {
+  						'<visibilityHelper(\else)>
+  						'}";	
   				}
   			}
   			case question(str question, AId identifier, AType t, list[AExpr] expr): {
