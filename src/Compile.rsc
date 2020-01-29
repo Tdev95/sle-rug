@@ -74,18 +74,18 @@ str pretty_print(AExpr c){
 	switch(c){
 		case brackets(AExpr ex): return "(<pretty_print(ex)>)";
 		case not(AExpr ex): return "!" + "(<pretty_print(ex)>)";
-		case divide(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) / (<pretty_print(ex1)>)";
-		case multiply(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) * (<pretty_print(ex1)>)";
-		case add(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) + (<pretty_print(ex1)>)";
-		case subtract(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) - (<pretty_print(ex1)>)";
-		case less(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) \< (<pretty_print(ex1)>)";
-		case gtr(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) \> (<pretty_print(ex1)>)";
-		case leq(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) \<= (<pretty_print(ex1)>)";
-		case geq(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) \>= (<pretty_print(ex1)>)";
-		case eq(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) == (<pretty_print(ex1)>)";
-		case neq(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) != (<pretty_print(ex1)>)";
-		case and(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) && (<pretty_print(ex1)>)";
-		case or(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) || (<pretty_print(ex1)>)";
+		case divide(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) / (<pretty_print(ex2)>)";
+		case multiply(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) * (<pretty_print(ex2)>)";
+		case add(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) + (<pretty_print(ex2)>)";
+		case subtract(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) - (<pretty_print(ex2)>)";
+		case less(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) \< (<pretty_print(ex2)>)";
+		case gtr(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) \> (<pretty_print(ex2)>)";
+		case leq(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) \<= (<pretty_print(ex2)>)";
+		case geq(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) \>= (<pretty_print(ex2)>)";
+		case eq(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) == (<pretty_print(ex2)>)";
+		case neq(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) != (<pretty_print(ex2)>)";
+		case and(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) && (<pretty_print(ex2)>)";
+		case or(AExpr ex1, AExpr ex2): return "(<pretty_print(ex1)>) || (<pretty_print(ex2)>)";
 		case ref(AId id): return "(getValue(\"<id.name>\"))";
 		case integer(int n): {
 			
