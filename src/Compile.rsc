@@ -32,6 +32,7 @@ HTML5Node form2html(AForm f) {
   
   HEAD = head([meta(charset("UTF-8")), title(f.name), script(filename)]);
   BODY = body(onload("ev(); updateVisibility();"),
+  			p("Fill in the form and press submit to list the answers:"),
     		form([onsubmit("return false")] + [form2html(question) | question <- f.questions] +
     			[input(\type("submit"), \value("Submit"), onclick("onSubmit();"))]),
     		p(id("output"))
@@ -43,17 +44,18 @@ HTML5Node form2html(AQuestion q) {
   switch(q){
   	case question(str question, AId identifier, AType t, list[AExpr] expr): {
   		divargs = [class("question")];
+  		divargs += [question];
   		if(expr != []){
-  			divargs += [id(identifier.name), html5attr("expr", escape_quotes(pretty_print(expr[0])))];
+  			HTML5Node dv;
   			if(t.\type == "boolean"){
-  			  divargs += [html5attr("data-value", "false")];
+  			  dv = html5attr("data-value", "false");
   		  } else if (t.\type == "integer"){
-  		    divargs += [html5attr("data-value", 0)];
+  		    dv = html5attr("data-value", 0);
   		  } else if (t.\type == "string"){
-  		    divargs += [html5attr("data-value", "")];
+  		    dv = html5attr("data-value", "");
   		  }
+  		  	divargs += [span(id(identifier.name), html5attr("expr", escape_quotes(pretty_print(expr[0]))), dv, "0")];
   		} else {
-  		  divargs += [question];
   		  if(t.\type == "boolean"){
   			  divargs += [input(\type("checkbox"), id(identifier.name), onchange("ev(); updateVisibility();"))];
   		  } else if (t.\type == "integer"){
@@ -215,6 +217,7 @@ str recalculate(){
 		'	if(em.hasAttribute(\"expr\")) {
 		'		var value = eval(em.getAttribute(\"expr\"));
 		'		em.setAttribute(\"data-value\", value);
+		'		em.innerHTML = value;
 		'		return value;
 		'	}
 		'	return getValue(id);
@@ -247,14 +250,12 @@ str update_visibility(AForm f){
 		'	// hide invisible elements, show visible elements
 		'	for(i in ids){
 		'		var em = document.getElementById(ids[i]);
-		'		if(!em.hasAttribute(\"expr\")){
-		'			if(em.visible){
-		'				if(em.parentElement.hasAttribute(\"hidden\")){
-		'					em.parentElement.removeAttribute(\"hidden\");
-		'				}
-		'			} else {
-		'				em.parentElement.setAttribute(\"hidden\", \"true\");
+		'		if(em.visible){
+		'			if(em.parentElement.hasAttribute(\"hidden\")){
+		'				em.parentElement.removeAttribute(\"hidden\");
 		'			}
+		'		} else {
+		'			em.parentElement.setAttribute(\"hidden\", \"true\");
 		'		}
 		'	}
 		'}\n";
